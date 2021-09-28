@@ -113,11 +113,16 @@ export class InboxCalendarComponent implements OnInit {
         data = <any>args.data[0];
 
         const objData: InboxData = this.getAppointmentData(data);
-        this.inboxService.addAppointment(objData);
+        this.inboxService.addAppointment(objData).subscribe((data:any)=>{
+         console.log('Sucess'); 
+        },erorror=>{
+          console.log(erorror);
+        });
       } else if (args.requestType === 'eventChange') {
         data = <any>args.data;
 
-        const objData = this.getAppointmentData(data);
+        const objData1 :InboxData= this.getAppointmentData(data);
+        this.inboxService.updateAppointment(objData1);
       } else if (args.requestType === 'eventRemove') {
         data = <any>args.data;
       }
@@ -136,20 +141,21 @@ export class InboxCalendarComponent implements OnInit {
   getAppointmentData(data: any) {
     let appointmentId: number = data.Id;
     let title: string = data.title;
-    let Description: string = data.description;
-    let PhysicianId: number = data.PhysicianId;
-    let EndTime: String = data.endTime;
-    let StartTime: String = data.startTime;
+    let description: string = data.description;
+    let physicianId: number = data.PhysicianId;
+    let endTime: String = data.endTime;
+    let startTime: String = data.startTime;
     let reason: string = data.reason;
-
-    //const obj = news InboxData(appointmentId,title,StartTime,EndTime,Description,PhysicianId,6);
+    let patientId:number= 2;
+    // const obj =
+    //  news InboxData(appointmentId,title,StartTime,EndTime,Description,PhysicianId,6);
 
     const obj = {
       id: appointmentId,
       title: title,
-      startTime: StartTime,
-      endTime: EndTime,
-      description: Description,
+      startTime: startTime,
+      endTime: endTime,
+      description: description,
       physicianId: 112,
       patientId: 2,
       reason: 'no reason',

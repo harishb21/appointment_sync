@@ -1,14 +1,16 @@
 
 export class InboxData {    
+    
+    public id: number;
+        public title: String;
+        public startTime: String;
+        public endTime: String;
+        public description: String;
+        public physicianId:number;
+        public patientId:number;
+        public reason:String;
     constructor(
-        public id: number,
-        public title: String,
-        public startTime: String,
-        public endTime: String,
-        public description: String,
-        public physicianId:number,
-        public patientId:number,
-        public reason:String
+        
     ){}
 }
 export class Staff{

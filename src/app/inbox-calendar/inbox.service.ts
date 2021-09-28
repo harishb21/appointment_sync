@@ -2,7 +2,7 @@ import { Appointment, InboxData } from './inbox.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import {Http, Response, Headers, RequestOptions} from "@angular/http";
 @Injectable({ providedIn: 'root' })
 export class InboxService {
   constructor(private http: HttpClient) {}
@@ -16,24 +16,27 @@ export class InboxService {
   }
 
   addAppointment(inbox: InboxData) {
-
-      const localInbox =   this.http.post(`${this.HOST_URL}/api/appointments`,inbox);
-      console.log(localInbox);
+   
+    
+    return  this.http.post<InboxData>(`${this.HOST_URL}/api/appointments`,inbox);
+    
     
     // this.listOfInboxData.push(inbox);
     // console.log(inbox);
     
   }
 
-  updateAppointment(appointmentNum: InboxData) {
+  updateAppointment(appointment: InboxData) {
     let count: number = 0;
     this.listOfInboxData.forEach((element) => {
       count++;
-      if (element.id === appointmentNum.id) {
-        this.listOfInboxData[count - 1] = appointmentNum;
+      if (element.id === appointment.id) {
+        this.listOfInboxData[count - 1] = appointment;
       }
     });
-  }
+    const putMethod = this.http.put<InboxData>(`${this.HOST_URL}/api/appointments`,appointment);
+    console.log(putMethod);
+}
 
   getAppointment(index: number) {
     return this.listOfInboxData[index];
