@@ -88,6 +88,7 @@ export class InboxCalendarComponent implements OnInit {
       this.eventSettings = {
         dataSource: <InboxData[]>extend([], data, null, true),
         fields: {
+          id:'id',
           subject: { name: 'title' },
           description: { name: 'description' },
           startTime: { name: 'startTime' },
@@ -97,49 +98,44 @@ export class InboxCalendarComponent implements OnInit {
     });
   }
 
-  public dateParser(data: string) {
+  public dateParser(data: string) { 
     return new Date(data);
   }
   ngOnInit(): void {}
 
   public onChange(args: any) {}
   public onActionBegin(args: { [key: string]: Object }): void {
+   //console.log(args);
+   
     if (
       args.requestType === 'eventCreate' ||
-      args.requestType === 'eventChange'
+      args.requestType === 'eventChange' ||  args.requestType === 'eventRemove'
     ) {
       let data: any;
       if (args.requestType === 'eventCreate') {
         data = <any>args.data[0];
 
         const objData: InboxData = this.getAppointmentData(data);
-        this.inboxService.addAppointment(objData).subscribe((data:any)=>{
-         console.log('Sucess'); 
-        },erorror=>{
-          console.log(erorror);
-        });
+        this.inboxService.addAppointment(objData);
       } else if (args.requestType === 'eventChange') {
         data = <any>args.data;
 
         const objData1 :InboxData= this.getAppointmentData(data);
         this.inboxService.updateAppointment(objData1);
       } else if (args.requestType === 'eventRemove') {
-        data = <any>args.data;
+        data = <any>args.data[0];
+        //console.log("delete..."+data.id);
+        this.inboxService.deleteAppointment(data.id);
       }
 
-      if (
-        !this.scheduleObj.isSlotAvailable(
-          data.startTime as Date,
-          data.endTime as Date
-        )
-      ) {
-        args.cancel = true;
-      }
+      // if (!this.scheduleObj.isSlotAvailable(data.startTime as Date,data.endTime as Date)) {
+      //   args.cancel = true;
+      // }
     }
   }
 
   getAppointmentData(data: any) {
-    let appointmentId: number = data.Id;
+    let appointmentId: number = data.id;
     let title: string = data.title;
     let description: string = data.description;
     let physicianId: number = data.PhysicianId;

@@ -2,7 +2,6 @@ import { Appointment, InboxData } from './inbox.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {Http, Response, Headers, RequestOptions} from "@angular/http";
 @Injectable({ providedIn: 'root' })
 export class InboxService {
   constructor(private http: HttpClient) {}
@@ -16,43 +15,56 @@ export class InboxService {
   }
 
   addAppointment(inbox: InboxData) {
-   
-    
-    return  this.http.post<InboxData>(`${this.HOST_URL}/api/appointments`,inbox);
-    
-    
-    // this.listOfInboxData.push(inbox);
-    // console.log(inbox);
-    
+    return this.http
+      .post<InboxData>(`${this.HOST_URL}/api/appointments`, inbox)
+      .subscribe(
+        (data: any) => {
+          console.log('Sucess Post');
+        },
+        (erorror) => {
+          console.log(erorror);
+        }
+      );
   }
 
   updateAppointment(appointment: InboxData) {
-    let count: number = 0;
-    this.listOfInboxData.forEach((element) => {
-      count++;
-      if (element.id === appointment.id) {
-        this.listOfInboxData[count - 1] = appointment;
-      }
-    });
-    const putMethod = this.http.put<InboxData>(`${this.HOST_URL}/api/appointments`,appointment);
-    console.log(putMethod);
-}
-
-  getAppointment(index: number) {
-    return this.listOfInboxData[index];
+    this.http
+      .put<InboxData>(`${this.HOST_URL}/api/appointments`, appointment)
+      .subscribe(
+        (data: any) => {
+          console.log('Sucess update');
+        },
+        (erorror) => {
+          console.log(erorror);
+        }
+      );
   }
 
-  // deleteAppointment(appointment: InboxData){
+  getAppointment(index: number) {
+    this.http
+      .get<InboxData>(`${this.HOST_URL}/api/appointments`+index)
+      .subscribe(
+        (data: any) => {
+          console.log('Sucess get method');
+        },
+        (erorror) => {
+          console.log(erorror);
+        }
+      );
+  }
 
-  //         let count:number=0;
-  //         this.listOfInboxData.forEach(element => {
-  //             count++;
-  //             if(element.Id === appointment.Id){
-  //                 this.listOfInboxData.splice(count-1, 1);
-  //             }
-  //         });
-
-  //     }
+  deleteAppointment(index: number){
+    this.http
+    .delete<InboxData>(`${this.HOST_URL}/api/appointments/`+index)
+    .subscribe(
+      (data: any) => {
+        console.log('Sucess delete record '+data);
+      },
+      (erorror) => {
+        console.log(erorror);
+      }
+    );
+    }
   //==================================service data========DB Data===============================================
   // listOfInboxData: InboxData[] = [
   //     {
